@@ -1,0 +1,1 @@
+angular.module('yii2-angular-form', []);

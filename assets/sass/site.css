@@ -1,0 +1,9 @@
+validator, message {
+  display: block;
+  height: initial; }
+
+input.ng-invalid.ng-touched {
+  border-color: red;
+  background-color: #ffccc0; }
+
+/*# sourceMappingURL=site.css.map */

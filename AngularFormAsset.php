@@ -1,0 +1,30 @@
+<?php
+
+namespace undefinedstudio\yii2\angularform;
+
+use yii\web\AssetBundle;
+
+class AngularFormAsset extends AssetBundle
+{
+    public $css = [
+        'sass/site.css'
+    ];
+
+    public $js = [
+        'js/yii2-angular-form.js',
+        'js/validator.js',
+        'js/usRequired.js',
+        'js/usString.js',
+        'js/message.js'
+    ];
+
+    public function init()
+    {
+        $this->sourcePath = __DIR__ . '/assets/';
+        parent::init();
+    }
+
+    public $depends = [
+        'undefinedstudio\yii2\angular\AngularAsset'
+    ];
+}
