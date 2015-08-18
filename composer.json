@@ -22,6 +22,12 @@
     "yiisoft/yii2": "*",
     "undefinedstudio/yii2-angular": "dev-master"
   },
+  "extra": {
+    "asset-installer-paths": {
+      "npm-asset-library": "vendor/npm",
+      "bower-asset-library": "vendor/bower"
+    }
+  },
   "autoload": {
     "psr-0": {
       "undefinedstudio\\yii2\\angularform\\": "/"
