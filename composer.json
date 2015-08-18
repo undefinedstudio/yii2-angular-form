@@ -14,11 +14,13 @@
       "homepage": "http://twistedmirrorgames.com"
     }
   ],
+  "minimum-stability": "dev",
   "keywords": ["yii2", "angular", "angularjs", "form"],
   "homepage": "https://github.com/undefinedstudio/yii2-angular-form",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "require": {
-    "yiisoft/yii2": "*"
+    "yiisoft/yii2": "*",
+    "undefinedstudio/yii2-angular": "dev-master"
   },
   "autoload": {
     "psr-0": {
