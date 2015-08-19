@@ -5,6 +5,7 @@ namespace undefinedstudio\yii2\angularform\validators;
 class StringValidator extends AngularBuiltInValidator
 {
     public $directive = 'us-string';
+    public $modelDirective = 'us-string';
 
     public function messages()
     {
@@ -18,8 +19,8 @@ class StringValidator extends AngularBuiltInValidator
     public function params()
     {
         return [
-            'min' => $this->originalValidator->min,
-            'max' => $this->originalValidator->max
+            'minlength' => $this->originalValidator->min,
+            'maxlength' => $this->originalValidator->max
         ];
     }
 }

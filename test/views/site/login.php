@@ -23,12 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
-        'name' => $model->formName(),
         'ngSubmit' => 'login()'
     ]); ?>
-
-        <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>" />
-
 
         <?= $form->field($model, 'username') ?>
 

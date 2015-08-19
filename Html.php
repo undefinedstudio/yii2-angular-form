@@ -23,11 +23,31 @@ class Html extends BaseHtml
             $options['ng-model'] = static::getInputNgModel($model, $attribute);
         }
 
+        $validators = $model->getActiveValidators($attribute);
+        foreach($validators as $validator) {
+            // Try to get wrapper if built-in validator
+            if (!($validator instanceof AngularValidatorInterface)) {
+                $validator = AngularBuiltInValidator::createFromBuiltIn($validator);
+                if ($validator == null) {
+                    // Validator not supported by angular, skipping
+                    continue;
+                }
+            }
+
+            if (!empty($validator->modelDirective)) {
+                $options[$validator->modelDirective] = true;
+            }
+
+            $options = array_merge($validator->params(), $options);
+        }
+
         // TODO: infer dynamic id from brackets ex: container[i].content => container-{{i}}-content
         /*if (!array_key_exists('id', $options)) {
             $options['id'] = static::getInputId($model, $attribute);
         }*/
-        return static::input($type, null, null, $options);
+
+        $name = Html::getInputName($model, $attribute);
+        return static::input($type, $name, null, $options);
     }
 
     /**

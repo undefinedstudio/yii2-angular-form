@@ -10,7 +10,8 @@ use yii\validators\Validator;
 class AngularBuiltInValidator extends AngularValidator
 {
     public static $defaultValidators = [
-        'yii\validators\RequiredValidator' => 'undefinedstudio\yii2\angularform\validators\RequiredValidator'
+        'yii\validators\RequiredValidator' => 'undefinedstudio\yii2\angularform\validators\RequiredValidator',
+        'yii\validators\StringValidator' => 'undefinedstudio\yii2\angularform\validators\StringValidator'
     ];
 
     public $originalValidator;

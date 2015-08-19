@@ -11,6 +11,9 @@ use undefinedstudio\yii2\angularform\Html;
 class AngularValidator extends Validator implements AngularValidatorInterface
 {
     public $directive;
+    public $modelDirective;
+
+    public $inputNameAttribute = 'name';
 
     public function messages()
     {
@@ -24,6 +27,14 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         return [];
     }
 
+    public function init()
+    {
+        parent::init();
+        if (is_null($this->modelDirective)) {
+            $this->modelDirective = $this->directive;
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -35,7 +46,7 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         }
 
         return Html::tag('validator', implode("\n", $messages), [
-            'ng-model' => Html::getInputNgModel($model, $attribute),
+            $this->inputNameAttribute => Html::getInputName($model, $attribute),
             $this->directive => true
         ]);
     }
