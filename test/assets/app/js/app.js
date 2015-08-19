@@ -1,13 +1,13 @@
-var app = angular.module('topdeck', [
+var app = angular.module('yii2-angular-form-test', [
     'yii2-angular-form'
 ]);
 
-app.config(function($locationProvider, $ariaProvider, $httpProvider) {
+app.config(function($httpProvider) {
 
     // Fix to prevent div from highlighting with ngModel
-    $ariaProvider.config({
+    /*$ariaProvider.config({
         tabindex: false
-    });
+    });*/
 
     // Automatically injects csrf token in post requests
     $httpProvider.interceptors.push(function csrfTokenInjector() {

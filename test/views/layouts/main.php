@@ -21,7 +21,7 @@ AppAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
-    <body>
+    <body ng-app="yii2-angular-form-test">
     <?php $this->beginBody() ?>
 
     <div class="wrap">
