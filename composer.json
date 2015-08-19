@@ -22,6 +22,9 @@
     "yiisoft/yii2": "*",
     "undefinedstudio/yii2-angular": "dev-master"
   },
+  "require-dev": {
+    "yiisoft/yii2-bootstrap": "*"
+  },
   "extra": {
     "asset-installer-paths": {
       "npm-asset-library": "vendor/npm",
@@ -30,7 +33,7 @@
   },
   "autoload": {
     "psr-4": {
-      "undefinedstudio\\yii2\\angularform\\": "/"
+      "undefinedstudio\\yii2\\angularform\\": ""
     }
   }
 }
