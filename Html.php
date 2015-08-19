@@ -3,6 +3,7 @@
 namespace undefinedstudio\yii2\angularform;
 
 use undefinedstudio\yii2\angularform\validators\AngularBuiltInValidator;
+use undefinedstudio\yii2\angularform\validators\AngularValidator;
 use undefinedstudio\yii2\angularform\validators\AngularValidatorInterface;
 use yii\helpers\BaseHtml;
 
@@ -34,8 +35,8 @@ class Html extends BaseHtml
                 }
             }
 
-            if (!empty($validator->modelDirective)) {
-                $options[$validator->modelDirective] = true;
+            if (!empty($validator->directive)) {
+                $options[$validator->directive] = true;
             }
 
             $options = array_merge($validator->params(), $options);
@@ -69,24 +70,12 @@ class Html extends BaseHtml
     {
         $attribute = static::getAttributeName($attribute);
         $tag = isset($options['tag']) ? $options['tag'] : 'div';
-        $encode = !isset($options['encode']) || $options['encode'] !== false;
+        //$encode = !isset($options['encode']) || $options['encode'] !== false;
         unset($options['tag'], $options['encode']);
 
-        $content = [];
-
-        $validators = $model->getActiveValidators($attribute);
-        foreach($validators as $validator) {
-            // Try to get wrapper if built-in validator
-            if (!($validator instanceof AngularValidatorInterface)) {
-                $validator = AngularBuiltInValidator::createFromBuiltIn($validator);
-                if ($validator == null) {
-                    // Validator not supported by angular, skipping
-                    continue;
-                }
-            }
-
-            $content[] = $validator->renderValidator($model, $attribute);
-        }
+        $content = array_map(function(AngularValidatorInterface $validator) use ($model, $attribute) {
+            return $validator->renderValidator($model, $attribute);
+        }, AngularValidator::getAngularValidators($model, $attribute));
 
         return Html::tag($tag, implode("\n", $content), $options);
     }

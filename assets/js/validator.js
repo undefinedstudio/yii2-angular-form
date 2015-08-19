@@ -1,31 +1,21 @@
 angular.module('yii2-angular-form').directive('validator', [function() {
     return {
         restrict: 'AE',
-        require: ['validator', '^form'],
-        controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
-            function getMessage(name) {
-                return name ? $element.find('message[name=' + name + ']') : $element.find('message');
-            }
+        require: '^form',
+        link: function($scope, $element, $attrs, form) {
+            var field = form[$attrs.target];
 
-            this.showMessage = function (name) {
-                getMessage(name).removeClass('ng-hide');
-            };
-
-            this.hideMessage = function (name) {
-                getMessage(name).addClass('ng-hide');
-            };
-        }],
-        link: function($scope, $element, $attrs, ctrls) {
-            var ctrl = ctrls[0], form = ctrls[1];
-
-            ctrl.mapMessage = function(validatorName, messageName) {
-                var field = form[$attrs.name];
-                return $scope.$watch(function() {
-                    return field.$error[validatorName];
-                }, function(invalid) {
-                    (invalid && field.$dirty) ? ctrl.showMessage(messageName) : ctrl.hideMessage(messageName);
+            $scope.$watch(function() {
+                return field.$error;
+            }, function updateMessages(validators) {
+                $element.find('message').addClass('ng-hide');
+                angular.forEach(validators, function(valid, key) {
+                    if (valid && field.$dirty) {
+                        var $message = $element.find('message[validate=' + key + ']');
+                        $message.removeClass('ng-hide');
+                    }
                 });
-            };
+            }, true);
         }
-    }
+    };
 }]);

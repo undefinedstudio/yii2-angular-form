@@ -11,9 +11,6 @@ use undefinedstudio\yii2\angularform\Html;
 class AngularValidator extends Validator implements AngularValidatorInterface
 {
     public $directive;
-    public $modelDirective;
-
-    public $inputNameAttribute = 'name';
 
     public function messages()
     {
@@ -27,12 +24,9 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         return [];
     }
 
-    public function init()
+    public function validators()
     {
-        parent::init();
-        if (is_null($this->modelDirective)) {
-            $this->modelDirective = $this->directive;
-        }
+        return [];
     }
 
     /**
@@ -40,14 +34,16 @@ class AngularValidator extends Validator implements AngularValidatorInterface
      */
     public function renderValidator($model, $attribute)
     {
+        $validators = $this->validators();
+
         $messages = [];
         foreach($this->prepareMessages($model, $attribute) as $name => $message) {
-            $messages[] = Html::tag('message', $message, compact('name'));
+            $validate = isset($validators[$name]) ? $validators[$name] : $this->directive;
+            $messages[] = Html::tag('message', $message, compact('name', 'validate'));
         }
 
         return Html::tag('validator', implode("\n", $messages), [
-            $this->inputNameAttribute => Html::getInputName($model, $attribute),
-            $this->directive => true
+            'target' => Html::getInputName($model, $attribute)
         ]);
     }
 
@@ -65,5 +61,28 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         return array_map(function($message) use ($params) {
             return Yii::t('validators', $message, $params);
         }, $this->messages());
+    }
+
+    /**
+     * @param Model $model
+     * @param string $attribute
+     * @return AngularValidator[]
+     */
+    public static function getAngularValidators($model, $attribute)
+    {
+        $validators = $model->getActiveValidators($attribute);
+        foreach($validators as $i => $validator) {
+            // Try to get wrapper if built-in validator
+            if (!($validator instanceof AngularValidatorInterface)) {
+                $validators[$i] = AngularBuiltInValidator::createFromBuiltIn($validator);
+
+                // If validator is not supported by angular, skip
+                if ($validators[$i] == null) {
+                    unset($validators[$i]);
+                }
+            }
+        }
+
+        return $validators;
     }
 }
