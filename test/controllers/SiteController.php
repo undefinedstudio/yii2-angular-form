@@ -3,11 +3,13 @@
 namespace app\controllers;
 
 use Yii;
+use yii\web\Response;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\MdAutocompleteForm;
 
 class SiteController extends Controller
 {
@@ -70,12 +72,30 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 
-    public function actionAbout()
+    public function actionMdAutocomplete()
     {
-        return $this->render('about');
+        $model = new MdAutocompleteForm();
+        /*if ($model->load(Yii::$app->request->post())) {
+            return $this->goBack();
+        }*/
+        return $this->render('md-autocomplete', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionVegetables()
+    {
+        // Simulate network delay
+        sleep(1);
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return  [
+            ['name' => 'Pepperoni', 'color' => 'Red, green or yellow'],
+            ['name' => 'Carrot', 'color' => 'Orange'],
+            ['name' => 'Zucchini', 'color' => 'Dark green']
+        ];
     }
 }

@@ -13,7 +13,9 @@ class AppAsset extends AssetBundle
     ];
 
     public $js = [
-        'js/app.js'
+        'js/app.js',
+        'js/LoginController.js',
+        'js/MdAutocompleteController.js'
     ];
 
     public $depends = [

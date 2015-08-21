@@ -33,7 +33,8 @@
   },
   "autoload": {
     "psr-4": {
-      "undefinedstudio\\yii2\\angularform\\": ""
+      "undefinedstudio\\yii2\\angularform\\": "",
+      "undefinedstudio\\yii2\\angularwidgets\\": "widgets"
     }
   }
 }

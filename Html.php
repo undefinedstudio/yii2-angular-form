@@ -54,6 +54,17 @@ class Html extends BaseHtml
     /**
      * @inheritdoc
      */
+    public static function activeHiddenInput($model, $attribute, $options = [])
+    {
+        if (!isset($options['ng-value'])) {
+            $options['ng-value'] = static::getInputNgModel($model, $attribute);
+        }
+        return static::activeInput('hidden', $model, $attribute, $options);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function activeLabel($model, $attribute, $options = [])
     {
         $for = array_key_exists('for', $options) ? $options['for'] : null/*static::getInputId($model, $attribute)*/;

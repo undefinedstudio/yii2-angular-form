@@ -1,18 +1,19 @@
 <?php
 
-/* @var $this yii\web\View */
-
+use app\models\LoginForm;
 use undefinedstudio\yii2\angularform\AngularForm;
-use yii\bootstrap\ActiveForm;
-use yii\helpers\Html;
 
-$model = new \app\models\LoginForm();
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+/** @var yii\web\View $this  */
+/** @var LoginForm $model */
 
 $this->title = "Login";
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="site-login">
+<div class="site-login" ng-controller="LoginController">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Please fill out the following fields to login:</p>
@@ -23,7 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
-        'ngSubmit' => 'login()'
+        'action' => Url::to(['/site/post-test']),
+        //'ngSubmit' => 'login()'
     ]); ?>
 
         <?= $form->field($model, 'username') ?>

@@ -6,6 +6,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
@@ -18,6 +19,7 @@ AppAsset::register($this);
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
+        <base href="<?= Url::base(true) ?>" >
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
@@ -27,7 +29,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
         NavBar::begin([
-            'brandLabel' => 'My Company',
+            'brandLabel' => 'Yii2 Angular Form',
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
                 'class' => 'navbar-inverse navbar-fixed-top',
@@ -37,7 +39,6 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
                 Yii::$app->user->isGuest ?
                     ['label' => 'Login', 'url' => ['/site/login']] :
                     [
@@ -45,6 +46,7 @@ AppAsset::register($this);
                         'url' => ['/site/logout'],
                         'linkOptions' => ['data-method' => 'post']
                     ],
+                ['label' => 'MdAutocomplete', 'url' => ['/site/md-autocomplete']],
             ],
         ]);
         NavBar::end();

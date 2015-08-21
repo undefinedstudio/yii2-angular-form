@@ -30,6 +30,11 @@ class AngularForm extends Widget
     public $name = 'form';
 
     /**
+     * @var string The resource to post the form data to
+     */
+    public $action;
+
+    /**
      * @var array|string $action the form action URL. This parameter will be processed by [[\yii\helpers\Url::to()]].
      * @see method for specifying the HTTP method for this form.
      */
@@ -68,6 +73,7 @@ class AngularForm extends Widget
     {
         $this->options = array_merge([
             'name' => empty($this->name) ? null : $this->name,
+            'action' => empty($this->action) ? null : $this->action,
             'novalidate' => true,
             'ng-submit' => empty($this->ngSubmit) ? null : $this->ngSubmit
         ], $this->options);

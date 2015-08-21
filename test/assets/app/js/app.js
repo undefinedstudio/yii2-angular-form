@@ -1,5 +1,7 @@
 var app = angular.module('yii2-angular-form-test', [
-    'yii2-angular-form'
+    'yii2-angular-form',
+    'ngResource',
+    'ngMaterial'
 ]);
 
 app.config(function($httpProvider) {
