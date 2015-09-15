@@ -10,6 +10,7 @@ class MdAutocomplete extends AngularWidget
     public $modelAttribute = 'md-search-text';
     public $options = [];
     public $itemTemplate = '';
+    public $notFound = 'No matches found.';
 
     public $selectedItem;
     public $searchTextChange;
@@ -20,6 +21,7 @@ class MdAutocomplete extends AngularWidget
     public $minLength = 2;
     public $delay = 200;
     public $placeholder = '';
+    public $menuClass;
 
     public function run()
     {
@@ -32,11 +34,15 @@ class MdAutocomplete extends AngularWidget
             'md-item-text' => $this->itemText,
             'md-min-length' => $this->minLength,
             'md-delay' => $this->delay,
-            'placeholder' => $this->placeholder
+            'placeholder' => $this->placeholder,
+            'md-menu-class' => $this->menuClass
         ], $this->options);
 
         $hiddenInput = Html::activeHiddenInput($this->model, $this->attribute);
-        return $hiddenInput . Html::tag('md-autocomplete', Html::tag('md-item-template', $this->itemTemplate), $this->options);
+
+        $itemTemplate = Html::tag('md-item-template', $this->itemTemplate);
+        $notFound = Html::tag('md-not-found', $this->notFound);
+        return $hiddenInput . Html::tag('md-autocomplete', $itemTemplate . $notFound, $this->options);
     }
 
     public function replaceSearchText($value, $placeholder = '{searchText}')
