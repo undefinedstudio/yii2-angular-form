@@ -32,12 +32,6 @@
       "bower-asset-library": "vendor/bower"
     }
   },
-  "scripts": {
-    "post-update-cmd": "undefinedstudio\\yii2\\angularform\\TestIgnore::postUpdate",
-    "post-package-install": [
-      "undefinedstudio\\yii2\\angularform\\TestIgnore::postPackageInstall"
-    ]
-  },
   "autoload": {
     "psr-4": {
       "undefinedstudio\\yii2\\angularform\\": "",
