@@ -20,6 +20,7 @@
   "license": "BSD-3-Clause",
   "require": {
     "yiisoft/yii2": "*",
+    "composer-plugin-api": "^1.0",
     "undefinedstudio/yii2-angular": "dev-master"
   },
   "require-dev": {
@@ -30,6 +31,12 @@
       "npm-asset-library": "vendor/npm",
       "bower-asset-library": "vendor/bower"
     }
+  },
+  "scripts": {
+    "post-update-cmd": "undefinedstudio\\yii2\\angularform\\TestIgnore::postUpdate",
+    "post-package-install": [
+      "undefinedstudio\\yii2\\angularform\\TestIgnore::postPackageInstall"
+    ]
   },
   "autoload": {
     "psr-4": {
