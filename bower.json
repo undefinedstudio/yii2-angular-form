@@ -1,0 +1,34 @@
+{
+  "name": "yii2-angular-form",
+  "homepage": "https://github.com/undefinedstudio/yii2-angular-form",
+  "authors": [
+    "Gabriele Della Casa Venturelli <hardsetting@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "master",
+    "angular-animate": "master",
+    "angular-aria": "master",
+    "angular-material": "master",
+    "angular-messages": "master",
+    "angular-mocks": "master",
+    "angular-resource": "master",
+    "angular-route": "master"
+  },
+  "resolutions": {
+    "angular": "master",
+    "angular-aria": "master",
+    "angular-animate": "master"
+  }
+}
