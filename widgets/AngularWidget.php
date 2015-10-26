@@ -17,6 +17,8 @@ class AngularWidget extends Widget
     public function init()
     {
         parent::init();
-        $this->options[$this->modelAttribute] = Html::getInputNgModel($this->model, $this->attribute);
+        if ($this->model && $this->attribute) {
+            $this->options[$this->modelAttribute] = Html::getInputNgModel($this->model, $this->attribute);
+        }
     }
 }

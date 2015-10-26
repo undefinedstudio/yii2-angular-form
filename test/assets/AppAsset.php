@@ -15,7 +15,8 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/app.js',
         'js/LoginController.js',
-        'js/MdAutocompleteController.js'
+        'js/MdAutocompleteController.js',
+        'js/MdChipsController.js'
     ];
 
     public $depends = [
@@ -25,6 +26,7 @@ class AppAsset extends AssetBundle
         'undefinedstudio\yii2\angular\AngularAsset',
         'undefinedstudio\yii2\angular\AngularAnimateAsset',
         'undefinedstudio\yii2\angular\AngularMaterialAsset',
+        'undefinedstudio\yii2\angular\AngularMessagesAsset',
         'undefinedstudio\yii2\angular\AngularRouteAsset',
         'undefinedstudio\yii2\angular\AngularResourceAsset',
 

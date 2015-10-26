@@ -12,6 +12,14 @@ class AngularValidator extends Validator implements AngularValidatorInterface
 {
     public $directive;
 
+    /**
+     * Message strings shown when validation fails.
+     * The key is needed to associate each message to its validator in the validators() method.
+     * The message can have parameters in the form of {parameter} with alphanumerical characters only
+     * according to Yii2 I18N formatting, and those parameters will be evaluated by params()
+     * or messageParams() if needed.
+     * @return array
+     */
     public function messages()
     {
         return [
@@ -19,11 +27,30 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         ];
     }
 
+    /**
+     * Defines the parameter values of directives and messages
+     * @return array
+     */
     public function params()
     {
         return [];
     }
 
+    /**
+     * Override this to name the message params differently from the directive ones
+     * @return array
+     */
+    public function messageParams()
+    {
+        return $this->params();
+    }
+
+    /**
+     * Maps each message to its trigger validator
+     * e.g. when form.model.$error.required is true, the message
+     * with key 'required' is shown
+     * @return array
+     */
     public function validators()
     {
         return [];
@@ -32,18 +59,20 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     /**
      * @inheritdoc
      */
-    public function renderValidator($model, $attribute)
+    public function renderValidator($model, $attribute, $formName = 'form')
     {
         $validators = $this->validators();
 
         $messages = [];
         foreach($this->prepareMessages($model, $attribute) as $name => $message) {
-            $validate = isset($validators[$name]) ? $validators[$name] : $this->directive;
-            $messages[] = Html::tag('message', $message, compact('name', 'validate'));
+            $messages[] = Html::tag('div', $message, [
+                'ng-message' => isset($validators[$name]) ? $validators[$name] : $this->directive
+            ]);
         }
 
-        return Html::tag('validator', implode("\n", $messages), [
-            'target' => Html::getInputName($model, $attribute)
+        return Html::tag('div', implode("\n", $messages), [
+            'ng-messages' => $formName . '[\'' . Html::getInputName($model, $attribute) . '\'].$error',
+            'ng-if' => $formName . '.$dirty'
         ]);
     }
 
@@ -54,12 +83,12 @@ class AngularValidator extends Validator implements AngularValidatorInterface
      */
     public function prepareMessages($model, $attribute)
     {
-        $params = array_merge($this->params(), [
+        $params = array_merge($this->messageParams(), [
             'attribute' => $model->getAttributeLabel($attribute)
         ]);
 
         return array_map(function($message) use ($params) {
-            return Yii::t('validators', $message, $params);
+            return Yii::$app->getI18n()->format($message, $params, Yii::$app->language);
         }, $this->messages());
     }
 

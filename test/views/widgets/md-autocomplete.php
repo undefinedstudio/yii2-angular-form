@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'itemTemplate' => Html::tag('span', '{{vegetable.name}} ({{vegetable.color}})')
         ]) ?>
 
-        <?= Html::submitButton('Login', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
 
     <?php AngularForm::end(); ?>
 </div>

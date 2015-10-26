@@ -8,11 +8,13 @@ class StringValidator extends AngularBuiltInValidator
 
     public function messages()
     {
-        return [
+        $messages = [
             'message' => $this->originalValidator->message,
             'tooShort' => $this->originalValidator->tooShort,
             'tooLong' => $this->originalValidator->tooLong
         ];
+
+        return $messages;
     }
 
     public function validators()
@@ -27,8 +29,16 @@ class StringValidator extends AngularBuiltInValidator
     public function params()
     {
         return [
-            'minlength' => $this->originalValidator->min,
-            'maxlength' => $this->originalValidator->max
+            'ng-minlength' => $this->originalValidator->min,
+            'ng-maxlength' => $this->originalValidator->max
+        ];
+    }
+
+    public function messageParams()
+    {
+        return [
+            'min' => $this->originalValidator->min,
+            'max' => $this->originalValidator->max
         ];
     }
 }

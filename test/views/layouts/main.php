@@ -46,7 +46,7 @@ AppAsset::register($this);
                         'url' => ['/site/logout'],
                         'linkOptions' => ['data-method' => 'post']
                     ],
-                ['label' => 'MdAutocomplete', 'url' => ['/site/md-autocomplete']],
+                ['label' => 'Widgets', 'url' => ['/widgets/index']],
             ],
         ]);
         NavBar::end();

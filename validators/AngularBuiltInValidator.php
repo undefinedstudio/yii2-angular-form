@@ -31,15 +31,4 @@ class AngularBuiltInValidator extends AngularValidator
             'originalValidator' => $validator
         ]);
     }
-
-    public function prepareMessages($model, $attribute)
-    {
-        $params = array_merge($this->params(), [
-            'attribute' => $model->getAttributeLabel($attribute)
-        ]);
-
-        return array_map(function($message) use ($params) {
-            return Yii::$app->getI18n()->format($message, $params, Yii::$app->language);
-        }, $this->messages());
-    }
 }

@@ -24,17 +24,8 @@ class Html extends BaseHtml
             $options['ng-model'] = static::getInputNgModel($model, $attribute);
         }
 
-        $validators = $model->getActiveValidators($attribute);
-        foreach($validators as $validator) {
-            // Try to get wrapper if built-in validator
-            if (!($validator instanceof AngularValidatorInterface)) {
-                $validator = AngularBuiltInValidator::createFromBuiltIn($validator);
-                if ($validator == null) {
-                    // Validator not supported by angular, skipping
-                    continue;
-                }
-            }
-
+        // Set additional parameters required by validators
+        foreach(AngularValidator::getAngularValidators($model, $attribute) as $validator) {
             if (!empty($validator->directive)) {
                 $options[$validator->directive] = true;
             }
@@ -57,7 +48,7 @@ class Html extends BaseHtml
     public static function activeHiddenInput($model, $attribute, $options = [])
     {
         if (!isset($options['ng-value'])) {
-            $options['ng-value'] = static::getInputNgModel($model, $attribute);
+            $options['ng-value'] = static::getInputNgModel($model, $attribute) . ' | json';
         }
         return static::activeInput('hidden', $model, $attribute, $options);
     }
@@ -81,11 +72,14 @@ class Html extends BaseHtml
     {
         $attribute = static::getAttributeName($attribute);
         $tag = isset($options['tag']) ? $options['tag'] : 'div';
-        //$encode = !isset($options['encode']) || $options['encode'] !== false;
-        unset($options['tag'], $options['encode']);
+        $formName = isset($options['formName']) ? $options['formName'] : 'form';
+        unset($options['tag'], $options['formName']);
 
-        $content = array_map(function(AngularValidatorInterface $validator) use ($model, $attribute) {
-            return $validator->renderValidator($model, $attribute);
+        /*$encode = !isset($options['encode']) || $options['encode'] !== false;
+        unset($options['encode']);*/
+
+        $content = array_map(function(AngularValidator $validator) use ($model, $attribute, $formName) {
+            return $validator->renderValidator($model, $attribute, $formName);
         }, AngularValidator::getAngularValidators($model, $attribute));
 
         return Html::tag($tag, implode("\n", $content), $options);
@@ -107,6 +101,7 @@ class Html extends BaseHtml
     public static function getInputNgModel($model, $attribute)
     {
         $formName = $model->formName();
+
         // TODO: ngModel validation
         /*if (!preg_match('/(^|.*\])([\w\.]+)(\[.*|$)/', $attribute, $matches)) {
             throw new InvalidParamException('Attribute name must contain word characters only.');

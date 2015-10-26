@@ -9,7 +9,8 @@ interface AngularValidatorInterface
     /**
      * @param Model $model
      * @param string $attribute
+     * @param string $formName
      * @return string Html content needed to render the validator client-side
      */
-    public function renderValidator($model, $attribute);
+    public function renderValidator($model, $attribute, $formName);
 }
