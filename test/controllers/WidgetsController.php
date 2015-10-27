@@ -6,7 +6,7 @@ use Yii;
 use yii\web\Response;
 use yii\web\Controller;
 
-use app\models\Form;
+use app\models\TestForm;
 use app\models\MdAutocompleteForm;
 use app\models\MdChipsForm;
 
@@ -19,7 +19,8 @@ class WidgetsController extends Controller
 
     public function actionForm()
     {
-        return $this->render('form');
+        $model = new TestForm();
+        return $this->render('form', compact('model'));
     }
 
     public function actionMdAutocomplete()

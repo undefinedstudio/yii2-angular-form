@@ -14,6 +14,7 @@ class AngularFormAsset extends AssetBundle
         'js/yii2-angular-form.js',
         'js/validator.js',
         'js/usString.js',
+        'js/usNumber.js',
         'js/usArray.js',
 
         'js/ngValue.js',
