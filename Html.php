@@ -70,9 +70,14 @@ class Html extends BaseHtml
      */
     public static function error($model, $attribute, $options = [])
     {
+        if (!isset($options['formName'])) {
+            throw new \InvalidArgumentException("AngularForm requires you to provide a form name.");
+        }
+
         $attribute = static::getAttributeName($attribute);
+
+        $formName = $options['formName'];
         $tag = isset($options['tag']) ? $options['tag'] : 'div';
-        $formName = isset($options['formName']) ? $options['formName'] : 'form';
         unset($options['tag'], $options['formName']);
 
         /*$encode = !isset($options['encode']) || $options['encode'] !== false;
@@ -108,5 +113,17 @@ class Html extends BaseHtml
         }*/
 
         return $formName == '' ? $attribute : "$formName.$attribute";
+    }
+
+    /**
+     * Generates the hierarchy to access the ngModel under the $form object in the AngularJS scope.
+     * @param Model $model
+     * @param string $attribute
+     * @param string $formName
+     * @return string
+     */
+    public static function getFormNgModel($model, $attribute, $formName)
+    {
+        return $formName . "['" . Html::getInputName($model, $attribute) . "']";
     }
 }

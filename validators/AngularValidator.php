@@ -59,7 +59,7 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     /**
      * @inheritdoc
      */
-    public function renderValidator($model, $attribute, $formName = 'form')
+    public function renderValidator($model, $attribute, $formName)
     {
         $validators = $this->validators();
 
@@ -70,9 +70,11 @@ class AngularValidator extends Validator implements AngularValidatorInterface
             ]);
         }
 
+        $formNgModel = Html::getFormNgModel($model, $attribute, $formName);
+
         return Html::tag('div', implode("\n", $messages), [
-            'ng-messages' => $formName . '[\'' . Html::getInputName($model, $attribute) . '\'].$error',
-            'ng-if' => $formName . '.$dirty'
+            'ng-messages' => $formNgModel . '.$error',
+            'ng-if' => $formNgModel . '.$dirty'
         ]);
     }
 

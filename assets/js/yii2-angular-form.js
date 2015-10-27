@@ -1,1 +1,1 @@
-angular.module('yii2-angular-form', []);
+angular.module('yii2-angular-form', ['ngMessages']);
