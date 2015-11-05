@@ -21,8 +21,7 @@
   "license": "BSD-3-Clause",
   "require": {
     "yiisoft/yii2": "*",
-    "composer-plugin-api": "^1.0",
-    "undefinedstudio/yii2-angular": "dev-master"
+    "undefinedstudio/yii2-angular": "^0.1.0"
   },
   "require-dev": {
     "yiisoft/yii2-bootstrap": "*"
