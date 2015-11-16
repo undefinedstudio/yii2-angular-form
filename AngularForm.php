@@ -24,14 +24,13 @@ class AngularForm extends Widget
      */
     public $fieldClass = 'undefinedstudio\yii2\angularform\AngularField';
 
-    /**
-     * @var string The form name
-     */
-    public $name = 'form';
+    /** @var string The form name */
+    public $name;
 
-    /**
-     * @var string The resource to post the form data to
-     */
+    /** @var Model The model object */
+    public $model;
+
+    /** @var string The resource to post the form data to */
     public $action;
 
     /**
@@ -40,9 +39,7 @@ class AngularForm extends Widget
      */
     public $ngSubmit;
 
-    /**
-     * @var bool Allow nested forms definition by using the ng-form tag
-     */
+    /** @var bool Allow nested forms definition by using the ng-form tag */
     public $nested = false;
 
     /**
@@ -60,9 +57,7 @@ class AngularForm extends Widget
      */
     public $fieldConfig = [];
 
-    /**
-     * @var AngularField[] the ActiveField objects that are currently active
-     */
+    /** @var AngularField[] the ActiveField objects that are currently active */
     private $_fields = [];
 
     /**
@@ -71,8 +66,10 @@ class AngularForm extends Widget
      */
     public function init()
     {
+        $this->name = !empty($this->name) ?  $this->name : $this->model->formName();
+
         $this->options = array_merge([
-            'name' => empty($this->name) ? null : $this->name,
+            'name' => $this->name,
             'action' => empty($this->action) ? null : $this->action,
             'novalidate' => true,
             'ng-submit' => empty($this->ngSubmit) ? null : $this->ngSubmit
@@ -99,7 +96,6 @@ class AngularForm extends Widget
      * Generates a form field.
      * A form field is associated with a model and an attribute. It contains a label, an input and an error message
      * and use them to interact with end users to collect their inputs for the attribute.
-     * @param Model $model the data model
      * @param string $attribute the attribute name or expression. See [[Html::getAttributeName()]] for the format
      * about attribute expression.
      * @param array $options the additional configurations for the field object. These are properties of [[AngularField]]
@@ -107,11 +103,11 @@ class AngularForm extends Widget
      * @return AngularField the created ActiveField object
      * @see fieldConfig
      */
-    public function field($model, $attribute, $options = [])
+    public function field($attribute, $options = [])
     {
         $config = $this->fieldConfig;
         if ($config instanceof \Closure) {
-            $config = call_user_func($config, $model, $attribute);
+            $config = call_user_func($config, $this->model, $attribute);
         }
 
         if (!isset($config['class'])) {
@@ -119,7 +115,7 @@ class AngularForm extends Widget
         }
 
         return Yii::createObject(ArrayHelper::merge($config, $options, [
-            'model' => $model,
+            'model' => $this->model,
             'attribute' => $attribute,
             'form' => $this,
         ]));
@@ -129,7 +125,6 @@ class AngularForm extends Widget
      * Begins a form field.
      * This method will create a new form field and returns its opening tag.
      * You should call [[endField()]] afterwards.
-     * @param Model $model the data model
      * @param string $attribute the attribute name or expression. See [[Html::getAttributeName()]] for the format
      * about attribute expression.
      * @param array $options the additional configurations for the field object
@@ -137,9 +132,9 @@ class AngularForm extends Widget
      * @see endField()
      * @see field()
      */
-    public function beginField($model, $attribute, $options = [])
+    public function beginField($attribute, $options = [])
     {
-        $field = $this->field($model, $attribute, $options);
+        $field = $this->field($attribute, $options);
         $this->_fields[] = $field;
         return $field->begin();
     }

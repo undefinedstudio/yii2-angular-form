@@ -2,9 +2,7 @@
 
 namespace undefinedstudio\yii2\angularform\validators;
 
-use undefinedstudio\yii2\angularform\Html;
 use Yii;
-use yii\base\Exception;
 use yii\validators\Validator;
 
 class AngularBuiltInValidator extends AngularValidator
@@ -15,6 +13,7 @@ class AngularBuiltInValidator extends AngularValidator
         'yii\validators\NumberValidator' => 'undefinedstudio\yii2\angularform\validators\NumberValidator'
     ];
 
+    /** @var Validator */
     public $originalValidator;
 
     /**
@@ -28,8 +27,23 @@ class AngularBuiltInValidator extends AngularValidator
             return null;
         }
 
+        //TODO: merge all properties from base Validator
         return new static::$defaultValidators[$className]([
+            'attributes' => $validator->attributes,
+            'on' => $validator->on,
+            'except' => $validator->except,
+            'skipOnError' => $validator->skipOnError,
+            'skipOnEmpty' => $validator->skipOnEmpty,
+
             'originalValidator' => $validator
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateValue($value)
+    {
+        return $this->originalValidator->validateValue($value);
     }
 }

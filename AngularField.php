@@ -7,8 +7,6 @@ use yii\base\Component;
 use yii\base\ErrorHandler;
 use yii\base\Model;
 
-use yii\validators\RequiredValidator;
-
 class AngularField extends Component
 {
     /**

@@ -2,19 +2,20 @@
 
 namespace undefinedstudio\yii2\angularform\validators;
 
+/**
+ *  @property \yii\validators\StringValidator $originalValidator
+ */
 class StringValidator extends AngularBuiltInValidator
 {
     public $directive = 'us-string';
 
     public function messages()
     {
-        $messages = [
+        return [
             'message' => $this->originalValidator->message,
             'tooShort' => $this->originalValidator->tooShort,
             'tooLong' => $this->originalValidator->tooLong
         ];
-
-        return $messages;
     }
 
     public function validators()

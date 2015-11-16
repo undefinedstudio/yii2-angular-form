@@ -3,9 +3,9 @@
 namespace app\models;
 
 use Yii;
-use yii\base\Model;
+use undefinedstudio\yii2\angularform\AngularModel;
 
-class TestForm extends Model
+class TestForm extends AngularModel
 {
     public $name;
     public $surname;

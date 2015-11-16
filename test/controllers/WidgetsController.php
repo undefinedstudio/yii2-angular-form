@@ -20,6 +20,20 @@ class WidgetsController extends Controller
     public function actionForm()
     {
         $model = new TestForm();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            if ($model->load(Yii::$app->request->bodyParams, '') && $model->validate()) {
+                return ['success' => true];
+            }
+
+            Yii::$app->response->statusCode = 400;
+            return [
+                'success' => false,
+                'errors' => $model->errors
+            ];
+        }
+
         return $this->render('form', compact('model'));
     }
 

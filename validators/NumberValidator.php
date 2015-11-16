@@ -2,6 +2,9 @@
 
 namespace undefinedstudio\yii2\angularform\validators;
 
+/**
+ *  @property \yii\validators\NumberValidator $originalValidator
+ */
 class NumberValidator extends AngularBuiltInValidator
 {
     public $directive = 'us-number';

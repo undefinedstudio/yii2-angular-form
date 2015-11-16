@@ -12,6 +12,8 @@ class AngularFormAsset extends AssetBundle
 
     public $js = [
         'js/yii2-angular-form.js',
+        'js/form.js',
+
         'js/validator.js',
         'js/usString.js',
         'js/usNumber.js',

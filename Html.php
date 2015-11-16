@@ -25,7 +25,8 @@ class Html extends BaseHtml
         }
 
         // Set additional parameters required by validators
-        foreach(AngularValidator::getAngularValidators($model, $attribute) as $validator) {
+        $validators = $model->getActiveValidators($attribute);
+        foreach(AngularValidator::createAngularValidators($validators) as $validator) {
             if (!empty($validator->directive)) {
                 $options[$validator->directive] = true;
             }
@@ -83,9 +84,10 @@ class Html extends BaseHtml
         /*$encode = !isset($options['encode']) || $options['encode'] !== false;
         unset($options['encode']);*/
 
+        $validators = $model->getActiveValidators($attribute);
         $content = array_map(function(AngularValidator $validator) use ($model, $attribute, $formName) {
             return $validator->renderValidator($model, $attribute, $formName);
-        }, AngularValidator::getAngularValidators($model, $attribute));
+        }, AngularValidator::createAngularValidators($validators));
 
         return Html::tag($tag, implode("\n", $content), $options);
     }
@@ -112,18 +114,27 @@ class Html extends BaseHtml
             throw new InvalidParamException('Attribute name must contain word characters only.');
         }*/
 
-        return $formName == '' ? $attribute : "$formName.$attribute";
+        return $formName == '' ? $attribute : "$formName.data.$attribute";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getInputName($model, $attribute)
+    {
+        return $attribute;
     }
 
     /**
      * Generates the hierarchy to access the ngModel under the $form object in the AngularJS scope.
      * @param Model $model
      * @param string $attribute
-     * @param string $formName
+     * @param string $gne
      * @return string
      */
-    public static function getFormNgModel($model, $attribute, $formName)
+    public static function getFormNgModel($model, $attribute, $gne)
     {
-        return $formName . "['" . Html::getInputName($model, $attribute) . "']";
+        $formName = $model->formName();
+        return $formName == '' ? $attribute : "$formName.$attribute";
     }
 }

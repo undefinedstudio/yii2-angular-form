@@ -12,22 +12,25 @@ $this->title = "Form";
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div>
+<div ng-controller="FormController">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php $form = AngularForm::begin([
-        'action' => Url::to(['/site/post-test']),
+        'ngSubmit' => 'submit()',
+        'model' => $model
     ]) ?>
 
     <p>Note that invalid styling only applies if invalid and dirty</p>
 
-    <?= $form->field($model, 'name') ?>
-    <?= $form->field($model, 'surname') ?>
+    <?= $form->field('name') ?>
+    <?= $form->field('surname') ?>
 
-    <?= $form->field($model, 'age') ?>
+    <?= $form->field('age') ?>
 
-    <?= $form->field($model, 'email') ?>
-    <?= $form->field($model, 'phone') ?>
+    <?= $form->field('email') ?>
+    <?= $form->field('phone') ?>
+
+    <?= Html::submitButton() ?>
 
     <?php AngularForm::end() ?>
 

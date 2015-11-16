@@ -2,6 +2,7 @@
 
 namespace undefinedstudio\yii2\angularform\validators;
 
+use undefinedstudio\yii2\angularform\AngularModel;
 use Yii;
 use yii\base\Model;
 use yii\validators\Validator;
@@ -10,6 +11,7 @@ use undefinedstudio\yii2\angularform\Html;
 
 class AngularValidator extends Validator implements AngularValidatorInterface
 {
+    /** @var string The directive that holds the validator */
     public $directive;
 
     /**
@@ -95,13 +97,11 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     }
 
     /**
-     * @param Model $model
-     * @param string $attribute
+     * @param Validator[] $validators
      * @return AngularValidator[]
      */
-    public static function getAngularValidators($model, $attribute)
+    public static function createAngularValidators($validators)
     {
-        $validators = $model->getActiveValidators($attribute);
         foreach($validators as $i => $validator) {
             // Try to get wrapper if built-in validator
             if (!($validator instanceof AngularValidatorInterface)) {
@@ -113,7 +113,37 @@ class AngularValidator extends Validator implements AngularValidatorInterface
                 }
             }
         }
-
         return $validators;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addError($model, $attribute, $message, $params = [])
+    {
+        $value = $model->$attribute;
+        $params['attribute'] = $model->getAttributeLabel($attribute);
+        $params['value'] = is_array($value) ? 'array()' : $value;
+
+        if ($model instanceof AngularModel) {
+            $key = $this->getValidatorDirective($message);
+            $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language), $key);
+        } else {
+            $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language));
+        }
+    }
+
+    /**
+     * @param string $message
+     * @return string|null
+     */
+    public function getValidatorDirective($message)
+    {
+        $messageKey = array_search($message, $this->messages());
+        if ($messageKey !== false) {
+            $validators = $this->validators();
+            return isset($validators[$messageKey]) ? $validators[$messageKey] : $this->directive;
+        }
+        return null;
     }
 }
