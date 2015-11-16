@@ -18,7 +18,6 @@ angular.module('yii2-angular-form').directive('ngMessage', function(serverValida
                 var $ngMessage = $element.siblings('[ng-message="' + serverValidator + '"]');
 
                 $ngMessage.html(value ? value[serverValidator] : '');
-                console.log($ngMessage, value);
             });
         }
     };
