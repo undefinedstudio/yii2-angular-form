@@ -20,7 +20,7 @@ class AngularModel extends Model
     public function createValidators()
     {
         $validators = parent::createValidators()->getArrayCopy();
-        return AngularValidator::createAngularValidators($validators);
+        return AngularValidator::convertBuiltInValidators($validators);
     }
 
     //region Errors

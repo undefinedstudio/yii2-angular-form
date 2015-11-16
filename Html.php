@@ -26,7 +26,7 @@ class Html extends BaseHtml
 
         // Set additional parameters required by validators
         $validators = $model->getActiveValidators($attribute);
-        foreach(AngularValidator::createAngularValidators($validators) as $validator) {
+        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
             if (!empty($validator->directive)) {
                 $options[$validator->directive] = true;
             }
@@ -87,7 +87,7 @@ class Html extends BaseHtml
         $validators = $model->getActiveValidators($attribute);
         $content = array_map(function(AngularValidator $validator) use ($model, $attribute, $formName) {
             return $validator->renderValidator($model, $attribute, $formName);
-        }, AngularValidator::createAngularValidators($validators));
+        }, AngularValidator::getAngularValidators($validators));
 
         return Html::tag($tag, implode("\n", $content), $options);
     }

@@ -97,10 +97,28 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     }
 
     /**
+     * Return the given validators, with converted validators when possible
+     * @param Validator[] $validators
+     * @return Validator[]
+     */
+    public static function convertBuiltInValidators($validators)
+    {
+        foreach($validators as $i => $validator) {
+            // Try to get wrapper if built-in validator
+            if (!($validator instanceof AngularValidatorInterface)) {
+                $convertedValidator = AngularBuiltInValidator::createFromBuiltIn($validator);
+                $validators[$i] = $convertedValidator ?: $validator;
+            }
+        }
+        return $validators;
+    }
+
+    /**
+     * Filters out non AngularValidators from the given validators
      * @param Validator[] $validators
      * @return AngularValidator[]
      */
-    public static function createAngularValidators($validators)
+    public static function getAngularValidators($validators)
     {
         foreach($validators as $i => $validator) {
             // Try to get wrapper if built-in validator

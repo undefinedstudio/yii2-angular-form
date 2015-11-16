@@ -23,7 +23,15 @@ class TestForm extends AngularModel
             [['name', 'surname'], 'string', 'max' => 30],
             [['age'], 'integer'],
             [['phone'], 'string', 'min' => 10, 'max' => 10, 'tooShort' => 'Must be exactly {min} digits.', 'tooLong' => 'Must be exactly {max} digits.'],
+            ['age', 'isAdult']
         ];
+    }
+
+    public function isAdult()
+    {
+        if ($this->age < 18) {
+            $this->addError('age', 'You must be adult to continue.', 'isAdult');
+        }
     }
 
 }
