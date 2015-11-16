@@ -30,7 +30,7 @@ class WidgetsController extends Controller
             Yii::$app->response->statusCode = 400;
             return [
                 'success' => false,
-                'errors' => $model->errors
+                'errors' => $model->firstErrors
             ];
         }
 

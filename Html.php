@@ -71,13 +71,8 @@ class Html extends BaseHtml
      */
     public static function error($model, $attribute, $options = [])
     {
-        if (!isset($options['formName'])) {
-            throw new \InvalidArgumentException("AngularForm requires you to provide a form name.");
-        }
-
         $attribute = static::getAttributeName($attribute);
 
-        $formName = $options['formName'];
         $tag = isset($options['tag']) ? $options['tag'] : 'div';
         unset($options['tag'], $options['formName']);
 
@@ -85,8 +80,8 @@ class Html extends BaseHtml
         unset($options['encode']);*/
 
         $validators = $model->getActiveValidators($attribute);
-        $content = array_map(function(AngularValidator $validator) use ($model, $attribute, $formName) {
-            return $validator->renderValidator($model, $attribute, $formName);
+        $content = array_map(function(AngularValidator $validator) use ($model, $attribute) {
+            return $validator->renderValidator($model, $attribute);
         }, AngularValidator::getAngularValidators($validators));
 
         return Html::tag($tag, implode("\n", $content), $options);
@@ -129,10 +124,9 @@ class Html extends BaseHtml
      * Generates the hierarchy to access the ngModel under the $form object in the AngularJS scope.
      * @param Model $model
      * @param string $attribute
-     * @param string $gne
      * @return string
      */
-    public static function getFormNgModel($model, $attribute, $gne)
+    public static function getFormNgModel($model, $attribute)
     {
         $formName = $model->formName();
         return $formName == '' ? $attribute : "$formName.$attribute";

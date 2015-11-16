@@ -3,9 +3,9 @@
 namespace app\models;
 
 use Yii;
-use undefinedstudio\yii2\angularform\AngularModel;
+use yii\base\Model;
 
-class TestForm extends AngularModel
+class TestForm extends Model
 {
     public $name;
     public $surname;
@@ -30,7 +30,7 @@ class TestForm extends AngularModel
     public function isAdult()
     {
         if ($this->age < 18) {
-            $this->addError('age', 'You must be adult to continue.', 'isAdult');
+            $this->addError('age', 'You must be adult to continue.');
         }
     }
 

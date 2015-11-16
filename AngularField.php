@@ -256,7 +256,6 @@ class AngularField extends Component
             return $this;
         }
         $options = array_merge($this->errorOptions, $options);
-        $options['formName'] = $this->form->name;
         $this->parts['{error}'] = Html::error($this->model, $this->attribute, $options);
 
         return $this;
