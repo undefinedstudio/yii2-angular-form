@@ -76,7 +76,7 @@ class AngularValidator extends Validator implements AngularValidatorInterface
 
         return Html::tag('div', implode("\n", $messages), [
             'ng-messages' => $formNgModel . '.$error',
-            'ng-if' => $formNgModel . '.$dirty'
+            'ng-if' => $formNgModel . '.$dirty || ' . $formNgModel . '.$submitted'
         ]);
     }
 
