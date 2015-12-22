@@ -72,11 +72,12 @@ class AngularValidator extends Validator implements AngularValidatorInterface
             ]);
         }
 
+        $formName = $model->formName();
         $formNgModel = Html::getFormNgModel($model, $attribute);
 
         return Html::tag('div', implode("\n", $messages), [
             'ng-messages' => $formNgModel . '.$error',
-            'ng-if' => $formNgModel . '.$dirty || ' . $formNgModel . '.$submitted'
+            'ng-if' => $formNgModel . '.$dirty || ' . $formName . '.$submitted'
         ]);
     }
 
@@ -147,12 +148,12 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         $params['attribute'] = $model->getAttributeLabel($attribute);
         $params['value'] = is_array($value) ? 'array()' : $value;
 
-        if ($model instanceof AngularModel) {
+        /*if ($model instanceof AngularModel) {
             $key = $this->getValidatorDirective($message);
             $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language), $key);
-        } else {
+        } else {*/
             $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language));
-        }
+        /*}*/
     }
 
     /**
