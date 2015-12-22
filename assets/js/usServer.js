@@ -4,7 +4,6 @@ angular.module('yii2-angular-form').directive('usServer', function(serverValidat
         restrict: 'A',
         require: 'ngModel',
         link: function($scope, $element, attrs, ngModel) {
-            console.log(serverValidator);
             ngModel.$validators[serverValidator] = function() {
                 return true;
             }
