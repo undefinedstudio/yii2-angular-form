@@ -46,6 +46,28 @@ class Html extends BaseHtml
     /**
      * @inheritdoc
      */
+    public static function activeHiddenInput($model, $attribute, $options = [])
+    {
+        if (!isset($options['ng-value'])) {
+            $options['ng-value'] = static::getInputNgModel($model, $attribute) . ' | json';
+        }
+
+        // Set additional parameters required by validators
+        $validators = $model->getActiveValidators($attribute);
+        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
+            if (!empty($validator->directive)) {
+                $options[$validator->directive] = true;
+            }
+
+            $options = array_merge($validator->params(), $options);
+        }
+
+        return static::activeInput('hidden', $model, $attribute, $options);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function activeTextarea($model, $attribute, $options = [])
     {
         if (!isset($options['ng-model'])) {
@@ -69,23 +91,21 @@ class Html extends BaseHtml
     /**
      * @inheritdoc
      */
-    public static function activeHiddenInput($model, $attribute, $options = [])
+    protected static function activeListInput($type, $model, $attribute, $items, $options = [])
     {
-        if (!isset($options['ng-value'])) {
-            $options['ng-value'] = static::getInputNgModel($model, $attribute) . ' | json';
+        if (!isset($options['ng-model'])) {
+            $options['ng-model'] = static::getInputNgModel($model, $attribute);
         }
 
-        // Set additional parameters required by validators
-        $validators = $model->getActiveValidators($attribute);
-        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
-            if (!empty($validator->directive)) {
-                $options[$validator->directive] = true;
-            }
-
-            $options = array_merge($validator->params(), $options);
+        $name = isset($options['name']) ? $options['name'] : static::getInputName($model, $attribute);
+        $selection = static::getAttributeValue($model, $attribute);
+        if (!array_key_exists('unselect', $options)) {
+            $options['unselect'] = '';
         }
-
-        return static::activeInput('hidden', $model, $attribute, $options);
+        if (!array_key_exists('id', $options)) {
+            $options['id'] = static::getInputId($model, $attribute);
+        }
+        return static::$type($name, $selection, $items, $options);
     }
 
     /**
