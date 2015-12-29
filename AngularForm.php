@@ -24,8 +24,20 @@ class AngularForm extends Widget
      */
     public $fieldClass = 'undefinedstudio\yii2\angularform\AngularField';
 
-    /** @var string The form name */
+    /**
+     * @var string The form name
+     * Defaults to the model's formName
+     * @see Model::formName()
+     * TODO: make this changeable
+     */
     public $name;
+
+    /**
+     * @var string The ngModel prefix for data.
+     * Defaults to FormName.$data
+     * TODO: make this work
+     */
+    public $dataModel;
 
     /** @var Model The model object */
     public $model;
@@ -40,6 +52,7 @@ class AngularForm extends Widget
     public $ngSubmit;
 
     /** @var bool Allow nested forms definition by using the ng-form tag */
+    // TODO: make this automatic
     public $nested = false;
 
     /**
