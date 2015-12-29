@@ -2,18 +2,13 @@
 
 namespace undefinedstudio\yii2\angularform;
 
-use undefinedstudio\yii2\angularform\validators\AngularBuiltInValidator;
 use undefinedstudio\yii2\angularform\validators\AngularValidator;
-use undefinedstudio\yii2\angularform\validators\AngularValidatorInterface;
-use yii\helpers\BaseHtml;
 
 use yii\base\Model;
 use yii\base\InvalidParamException;
+use yii\validators\Validator;
 
-use undefinedstudio\yii2\angularform\validators\RequiredValidator;
-use undefinedstudio\yii2\angularform\validators\StringValidator;
-
-class Html extends BaseHtml
+class Html extends \yii\helpers\BaseHtml
 {
     /**
      * @inheritdoc
@@ -24,20 +19,13 @@ class Html extends BaseHtml
             $options['ng-model'] = static::getInputNgModel($model, $attribute);
         }
 
-        // Set additional parameters required by validators
+        // Set additional parameters required by angular validators
         $validators = $model->getActiveValidators($attribute);
-        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
-            if (!empty($validator->directive)) {
-                $options[$validator->directive] = true;
-            }
+        static::addAngularValidators($options, $validators);
 
-            $options = array_merge($validator->params(), $options);
-        }
-
-        // TODO: infer dynamic id from brackets ex: container[i].content => container-{{i}}-content
-        /*if (!array_key_exists('id', $options)) {
+        if (!array_key_exists('id', $options)) {
             $options['id'] = static::getInputId($model, $attribute);
-        }*/
+        }
 
         $name = Html::getInputName($model, $attribute);
         return static::input($type, $name, null, $options);
@@ -52,15 +40,9 @@ class Html extends BaseHtml
             $options['ng-value'] = static::getInputNgModel($model, $attribute) . ' | json';
         }
 
-        // Set additional parameters required by validators
+        // Set additional parameters required by angular validators
         $validators = $model->getActiveValidators($attribute);
-        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
-            if (!empty($validator->directive)) {
-                $options[$validator->directive] = true;
-            }
-
-            $options = array_merge($validator->params(), $options);
-        }
+        static::addAngularValidators($options, $validators);
 
         return static::activeInput('hidden', $model, $attribute, $options);
     }
@@ -74,15 +56,9 @@ class Html extends BaseHtml
             $options['ng-model'] = static::getInputNgModel($model, $attribute);
         }
 
-        // Set additional parameters required by validators
+        // Set additional parameters required by angular validators
         $validators = $model->getActiveValidators($attribute);
-        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
-            if (!empty($validator->directive)) {
-                $options[$validator->directive] = true;
-            }
-
-            $options = array_merge($validator->params(), $options);
-        }
+        static::addAngularValidators($options, $validators);
 
         $name = Html::getInputName($model, $attribute);
         return static::textarea($name, null, $options);
@@ -96,6 +72,10 @@ class Html extends BaseHtml
         if (!isset($options['ng-model'])) {
             $options['ng-model'] = static::getInputNgModel($model, $attribute);
         }
+
+        // Set additional parameters required by angular validators
+        $validators = $model->getActiveValidators($attribute);
+        static::addAngularValidators($options, $validators);
 
         $name = isset($options['name']) ? $options['name'] : static::getInputName($model, $attribute);
         $selection = static::getAttributeValue($model, $attribute);
@@ -130,15 +110,50 @@ class Html extends BaseHtml
         $tag = isset($options['tag']) ? $options['tag'] : 'div';
         unset($options['tag'], $options['formName']);
 
+        // TODO: manage encode
         /*$encode = !isset($options['encode']) || $options['encode'] !== false;
         unset($options['encode']);*/
 
         $validators = $model->getActiveValidators($attribute);
-        $content = array_map(function(AngularValidator $validator) use ($model, $attribute) {
-            return $validator->renderValidator($model, $attribute);
-        }, AngularValidator::getAngularValidators($validators));
 
-        return Html::tag($tag, implode("\n", $content), $options);
+        // Get all ng-message directives from the model
+        $ngMessages = [];
+        foreach(AngularValidator::getAngularValidators($validators) as $validator) {
+            $ngMessages[] = static::ngMessages($validator, $model, $attribute);
+        }
+
+        // Wrap up all ngMessages in a ng-messages directive
+        $formName = $model->formName();
+        $formNgModel = Html::getFormNgModel($model, $attribute);
+
+        $ngMessages = Html::tag('div', implode("\n", $ngMessages), [
+            'ng-messages' => $formNgModel . '.$error',
+            'ng-if' => $formNgModel . '.$dirty || ' . $formName . '.$submitted'
+        ]);
+
+        return Html::tag($tag, $ngMessages, $options);
+    }
+
+    /**
+     * @param AngularValidator $validator The angular validator to get the validators from
+     * @param Model $model The model instance
+     * @param string $attribute The name of the attribute to get the ngMessages from
+     * @return string The ngMessages HTML
+     */
+    public static function ngMessages($validator, $model, $attribute)
+    {
+        $validators = $validator->validators();
+
+        $messages = $validator->prepareMessages($model, $attribute);
+
+        $ngMessages = [];
+        foreach($messages as $name => $message) {
+            $ngMessages[] = Html::tag('div', $message, [
+                'ng-message' => isset($validators[$name]) ? $validators[$name] : $validator->directive
+            ]);
+        }
+
+        return implode("\n", $ngMessages);
     }
 
     /**
@@ -163,7 +178,7 @@ class Html extends BaseHtml
             throw new InvalidParamException('Attribute name must contain word characters only.');
         }*/
 
-        return $formName == '' ? $attribute : "$formName.data.$attribute";
+        return $formName == '' ? $attribute : $formName . '.$data.' . $attribute;
     }
 
     /**
@@ -172,6 +187,15 @@ class Html extends BaseHtml
     public static function getInputName($model, $attribute)
     {
         return $attribute;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getInputId($model, $attribute)
+    {
+        // TODO: infer dynamic id from brackets ex: container[i].content => container-{{i}}-content
+        return null;
     }
 
     /**
@@ -184,5 +208,24 @@ class Html extends BaseHtml
     {
         $formName = $model->formName();
         return $formName == '' ? $attribute : "$formName.$attribute";
+    }
+
+    /**
+     * Adds angular validator directives to the specified otpions array.
+     * @param array $options the options to be modified.
+     * @param Validator[] $validators validators that must be added as directives to the field tag.
+     */
+    public static function addAngularValidators(&$options, $validators)
+    {
+        // Retrieve the angular validators only
+        $validators = AngularValidator::getAngularValidators($validators);
+
+        foreach($validators as $validator) {
+            if (!empty($validator->directive)) {
+                $options[$validator->directive] = true;
+            }
+
+            $options = array_merge($validator->params(), $options);
+        }
     }
 }

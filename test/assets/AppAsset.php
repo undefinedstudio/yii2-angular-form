@@ -15,6 +15,7 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/app.js',
         'js/FormController.js',
+        'js/PrefilledFormController.js',
         'js/LoginController.js',
         'js/MdAutocompleteController.js',
         'js/MdChipsController.js'

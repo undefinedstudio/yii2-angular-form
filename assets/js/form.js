@@ -4,9 +4,13 @@
             restrict: 'E',
             require: 'form',
             link: function($scope, $element, $attr, form) {
-                form.addErrors = function(errors, validator) {
-                    $.each(errors, function (key, error) {
-                        form[key].$error[validator || 'usServer'] = error;
+                form.$addError = function(key, error, validator) {
+                    form[key].$error[validator || 'usServer'] = error;
+                };
+
+                form.$addErrors = function(errors, validator) {
+                    angular.forEach(errors, function(error, key) {
+                        form.$addError(key, error, validator);
                     });
                 };
             }

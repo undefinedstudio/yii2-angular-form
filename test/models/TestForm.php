@@ -21,8 +21,13 @@ class TestForm extends Model
         return [
             [['name', 'surname', 'age'], 'required'],
             [['name', 'surname'], 'string', 'max' => 30],
-            [['age'], 'integer'],
-            [['phone'], 'string', 'min' => 10, 'max' => 10, 'tooShort' => 'Must be exactly {min} digits.', 'tooLong' => 'Must be exactly {max} digits.'],
+            ['age', 'integer'],
+            ['phone', 'string',
+                'min' => 10,
+                'max' => 10,
+                'tooShort' => 'Must be exactly {min} digits.',
+                'tooLong' => 'Must be exactly {max} digits.'
+            ],
             ['age', 'isAdult']
         ];
     }

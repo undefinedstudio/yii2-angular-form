@@ -17,24 +17,21 @@ class WidgetsController extends Controller
         return $this->render('index');
     }
 
-    public function actionForm()
+    public function actionPrefilledForm()
     {
         $model = new TestForm();
         if (Yii::$app->request->isPost) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             if ($model->load(Yii::$app->request->bodyParams, '') && $model->validate()) {
-                return ['success' => true];
+                return null;
             }
 
             Yii::$app->response->statusCode = 400;
-            return [
-                'success' => false,
-                'errors' => $model->firstErrors
-            ];
+            return ['errors' => $model->firstErrors];
         }
 
-        return $this->render('form', compact('model'));
+        return $this->render('prefilled-form', compact('model'));
     }
 
     public function actionMdAutocomplete()

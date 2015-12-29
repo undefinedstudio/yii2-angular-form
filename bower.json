@@ -29,6 +29,7 @@
   "resolutions": {
     "angular": "master",
     "angular-aria": "master",
-    "angular-animate": "master"
+    "angular-animate": "master",
+    "angular-messages": "master"
   }
 }

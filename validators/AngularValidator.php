@@ -2,14 +2,11 @@
 
 namespace undefinedstudio\yii2\angularform\validators;
 
-use undefinedstudio\yii2\angularform\AngularModel;
 use Yii;
 use yii\base\Model;
 use yii\validators\Validator;
 
-use undefinedstudio\yii2\angularform\Html;
-
-class AngularValidator extends Validator implements AngularValidatorInterface
+class AngularValidator extends Validator
 {
     /** @var string The directive that holds the validator */
     public $directive;
@@ -30,24 +27,6 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     }
 
     /**
-     * Defines the parameter values of directives and messages
-     * @return array
-     */
-    public function params()
-    {
-        return [];
-    }
-
-    /**
-     * Override this to name the message params differently from the directive ones
-     * @return array
-     */
-    public function messageParams()
-    {
-        return $this->params();
-    }
-
-    /**
      * Maps each message to its trigger validator
      * e.g. when form.model.$error.required is true, the message
      * with key 'required' is shown
@@ -59,29 +38,27 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     }
 
     /**
-     * @inheritdoc
+     * Defines the parameter values for directives
+     * e.g ['max' => 10] sets the attribute max="10" on the input tag
+     * @return array
      */
-    public function renderValidator($model, $attribute)
+    public function params()
     {
-        $validators = $this->validators();
-
-        $messages = [];
-        foreach($this->prepareMessages($model, $attribute) as $name => $message) {
-            $messages[] = Html::tag('div', $message, [
-                'ng-message' => isset($validators[$name]) ? $validators[$name] : $this->directive
-            ]);
-        }
-
-        $formName = $model->formName();
-        $formNgModel = Html::getFormNgModel($model, $attribute);
-
-        return Html::tag('div', implode("\n", $messages), [
-            'ng-messages' => $formNgModel . '.$error',
-            'ng-if' => $formNgModel . '.$dirty || ' . $formName . '.$submitted'
-        ]);
+        return [];
     }
 
     /**
+     * Defines the parameter values for messages
+     * e.g. ['max' => 10] translates the parameter {max} in messages to 10
+     * @return array
+     */
+    public function messageParams()
+    {
+        return $this->params();
+    }
+
+    /**
+     * Applies the required formatting and params to messages.
      * @param Model $model
      * @param string $attribute
      * @return array Prepared messages
@@ -92,9 +69,12 @@ class AngularValidator extends Validator implements AngularValidatorInterface
             'attribute' => $model->getAttributeLabel($attribute)
         ]);
 
-        return array_map(function($message) use ($params) {
-            return Yii::$app->getI18n()->format($message, $params, Yii::$app->language);
-        }, $this->messages());
+        $messages = [];
+        foreach($this->messages() as $name => $message) {
+            $messages[$name] = Yii::$app->getI18n()->format($message, $params, Yii::$app->language);
+        }
+
+        return $messages;
     }
 
     /**
@@ -106,7 +86,7 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     {
         foreach($validators as $i => $validator) {
             // Try to get wrapper if built-in validator
-            if (!($validator instanceof AngularValidatorInterface)) {
+            if (!($validator instanceof AngularValidator)) {
                 $convertedValidator = AngularBuiltInValidator::createFromBuiltIn($validator);
                 $validators[$i] = $convertedValidator ?: $validator;
             }
@@ -123,7 +103,7 @@ class AngularValidator extends Validator implements AngularValidatorInterface
     {
         foreach($validators as $i => $validator) {
             // Try to get wrapper if built-in validator
-            if (!($validator instanceof AngularValidatorInterface)) {
+            if (!($validator instanceof AngularValidator)) {
                 $validators[$i] = AngularBuiltInValidator::createFromBuiltIn($validator);
 
                 // If validator is not supported by angular, skip
@@ -134,39 +114,9 @@ class AngularValidator extends Validator implements AngularValidatorInterface
         }
 
         // Add ServerValidator to render server messages
+        // TODO: don't require this
         $validators[] = new ServerValidator();
 
         return $validators;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addError($model, $attribute, $message, $params = [])
-    {
-        $value = $model->$attribute;
-        $params['attribute'] = $model->getAttributeLabel($attribute);
-        $params['value'] = is_array($value) ? 'array()' : $value;
-
-        /*if ($model instanceof AngularModel) {
-            $key = $this->getValidatorDirective($message);
-            $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language), $key);
-        } else {*/
-            $model->addError($attribute, Yii::$app->getI18n()->format($message, $params, Yii::$app->language));
-        /*}*/
-    }
-
-    /**
-     * @param string $message
-     * @return string|null
-     */
-    public function getValidatorDirective($message)
-    {
-        $messageKey = array_search($message, $this->messages());
-        if ($messageKey !== false) {
-            $validators = $this->validators();
-            return isset($validators[$messageKey]) ? $validators[$messageKey] : $this->directive;
-        }
-        return null;
     }
 }
