@@ -121,6 +121,7 @@ class Html extends \yii\helpers\BaseHtml
         foreach(AngularValidator::getAngularValidators($validators) as $validator) {
             $ngMessages[] = static::ngMessages($validator, $model, $attribute);
         }
+        $ngMessages[] = Html::tag('div', null, ['us-server-message' => true]);
 
         // Wrap up all ngMessages in a ng-messages directive
         $formName = $model->formName();

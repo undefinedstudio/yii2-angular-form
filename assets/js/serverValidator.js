@@ -1,1 +1,0 @@
-angular.module('yii2-angular-form').constant('serverValidator', 'usServer');

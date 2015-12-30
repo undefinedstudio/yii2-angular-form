@@ -12,14 +12,14 @@ angular.module('yii2-angular-form').directive('usNumber', [function() {
             /** @var {string} attrs.usMin */
             if (attrs.usMin) {
                 ngModel.$validators.usMinNumber = function(value) {
-                    return value < attrs.usMin;
+                    return value >= attrs.usMin;
                 };
             }
 
             /** @var {string} attrs.usMax */
             if (attrs.usMax) {
                 ngModel.$validators.usMaxNumber = function(value) {
-                    return value < attrs.usMax;
+                    return value <= attrs.usMax;
                 };
             }
         }

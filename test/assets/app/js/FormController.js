@@ -1,11 +1,13 @@
 app.controller('FormController', function($scope, $http) {
     /** @var {Object} $scope.TestForm */
-    /** @var {Object} $scope.TestForm.values */
+    /** @var {Object} $scope.TestForm.$data */
 
     $scope.submit = function() {
         if (!$scope.TestForm.$valid) {
             return;
         }
+
+        $scope.TestForm.$clearErrors();
 
         console.log('Sending', $scope.TestForm.$data);
         $http.post('form/form', $scope.TestForm.$data).then(function(response) {

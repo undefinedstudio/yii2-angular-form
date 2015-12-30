@@ -113,10 +113,6 @@ class AngularValidator extends Validator
             }
         }
 
-        // Add ServerValidator to render server messages
-        // TODO: don't require this
-        $validators[] = new ServerValidator();
-
         return $validators;
     }
 }
