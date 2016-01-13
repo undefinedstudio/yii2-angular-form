@@ -91,6 +91,34 @@ class Html extends \yii\helpers\BaseHtml
     /**
      * @inheritdoc
      */
+    public static function activeCheckbox($model, $attribute, $options = [])
+    {
+        if (!isset($options['ng-model'])) {
+            $options['ng-model'] = static::getInputNgModel($model, $attribute);
+        }
+
+        // Set additional parameters required by angular validators
+        $validators = $model->getActiveValidators($attribute);
+        static::addAngularValidators($options, $validators);
+
+        $name = isset($options['name']) ? $options['name'] : static::getInputName($model, $attribute);
+
+        if (!array_key_exists('label', $options)) {
+            $options['label'] = static::encode($model->getAttributeLabel(static::getAttributeName($attribute)));
+        }
+
+        $checked = false;
+
+        if (!array_key_exists('id', $options)) {
+            $options['id'] = static::getInputId($model, $attribute);
+        }
+
+        return static::checkbox($name, $checked, $options);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function activeLabel($model, $attribute, $options = [])
     {
         $for = array_key_exists('for', $options) ? $options['for'] : null/*static::getInputId($model, $attribute)*/;

@@ -9,6 +9,7 @@ use yii\base\InvalidCallException;
 
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 class AngularForm extends Widget
 {
@@ -89,6 +90,7 @@ class AngularForm extends Widget
         ], $this->options);
 
         echo Html::beginTag($this->nested ? 'ng-form' : 'form', $this->options);
+        echo Html::tag('us-model-data', Json::encode($this->model->attributes), ['ng-model' => $this->model->formName() . '.$data']);
     }
 
     /**
