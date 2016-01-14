@@ -19,7 +19,8 @@ class AngularFormAsset extends AssetBundle
         'js/usArray.js',
 
         'js/ngValue.js',
-        'js/usServerMessage.js'
+        'js/usServerMessage.js',
+        'js/usModelData.js'
     ];
 
     public function init()
