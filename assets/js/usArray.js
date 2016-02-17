@@ -7,15 +7,17 @@ angular.module('yii2-angular-form').directive('usArray', [function() {
             var maxSize = Number($attrs.usArrayMax) || Number.MAX_VALUE;
 
             ngModel.$validators.usArray = function(value) {
-                return value instanceof Array;
+                return angular.isUndefined(value) || value instanceof Array;
             };
 
             ngModel.$validators.usArrayMin = function(value) {
-                return value instanceof Array && value.length >= minSize;
+                var aboveMin = value instanceof Array && value.length >= minSize;
+                return angular.isUndefined(value) || aboveMin;
             };
 
             ngModel.$validators.usArrayMax = function(value) {
-                return value instanceof Array && value.length <= maxSize;
+                var belowMax = value instanceof Array && value.length <= maxSize;
+                return angular.isUndefined(value) || belowMax;
             };
         }
     }

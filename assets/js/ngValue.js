@@ -8,7 +8,7 @@ angular.module('yii2-angular-form').directive('ngValue', [function() {
                 return;
             }
 
-            $scope.$watch($attrs.ngValue, function setDirty(value, oldValue) {
+            $scope.$watch($attrs.ngValue, function setDirty(value) {
                 if (!ngModel.$isEmpty(value)) {
                     ngModel.$setDirty();
                 }

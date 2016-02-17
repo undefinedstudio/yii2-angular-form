@@ -6,20 +6,21 @@ angular.module('yii2-angular-form').directive('usNumber', [function() {
 
             /** @var {string} attrs.usInteger */
             ngModel.$validators.usNumber = function(value) {
-                return parseFloat(value) === (value | 0) && (!attrs.usInteger || (value % 1 === 0) );
+                var isNumber = parseFloat(value) === (value | 0) && (!attrs.usInteger || (value % 1 === 0) );
+                return !value || isNumber;
             };
 
             /** @var {string} attrs.usMin */
             if (attrs.usMin) {
                 ngModel.$validators.usMinNumber = function(value) {
-                    return value >= attrs.usMin;
+                    return !value || value >= attrs.usMin;
                 };
             }
 
             /** @var {string} attrs.usMax */
             if (attrs.usMax) {
                 ngModel.$validators.usMaxNumber = function(value) {
-                    return value <= attrs.usMax;
+                    return !value || value <= attrs.usMax;
                 };
             }
         }
