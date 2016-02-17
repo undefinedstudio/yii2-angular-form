@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field('age') ?>
 
     <?= $form->field('email') ?>
+    <?= $form->field('pattern') ?>
+
     <?= $form->field('phone') ?>
 
     <?= Html::submitButton() ?>

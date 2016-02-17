@@ -3,7 +3,7 @@
 namespace undefinedstudio\yii2\angularform\validators;
 
 /**
- *  @property \yii\validators\StringValidator $originalValidator
+ *  @property \yii\validators\EmailValidator $originalValidator
  */
 class EmailValidator extends AngularBuiltInValidator
 {

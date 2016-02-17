@@ -11,7 +11,8 @@ class AngularBuiltInValidator extends AngularValidator
         'yii\validators\RequiredValidator' => 'undefinedstudio\yii2\angularform\validators\RequiredValidator',
         'yii\validators\StringValidator' => 'undefinedstudio\yii2\angularform\validators\StringValidator',
         'yii\validators\NumberValidator' => 'undefinedstudio\yii2\angularform\validators\NumberValidator',
-        'yii\validators\EmailValidator' => 'undefinedstudio\yii2\angularform\validators\EmailValidator'
+        'yii\validators\EmailValidator' => 'undefinedstudio\yii2\angularform\validators\EmailValidator',
+        'yii\validators\RegularExpressionValidator' => 'undefinedstudio\yii2\angularform\validators\RegularExpressionValidator'
     ];
 
     /** @var Validator */
