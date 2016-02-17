@@ -17,6 +17,7 @@ class AngularFormAsset extends AssetBundle
         'js/usString.js',
         'js/usNumber.js',
         'js/usArray.js',
+        'js/usEmail.js',
 
         'js/ngValue.js',
         'js/usServerMessage.js',

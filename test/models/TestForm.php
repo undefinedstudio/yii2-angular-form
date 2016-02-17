@@ -22,6 +22,7 @@ class TestForm extends Model
             [['name', 'surname', 'age'], 'required'],
             [['name', 'surname'], 'string', 'max' => 30],
             ['age', 'integer'],
+            ['email', 'email'],
             ['phone', 'string',
                 'min' => 10,
                 'max' => 10,

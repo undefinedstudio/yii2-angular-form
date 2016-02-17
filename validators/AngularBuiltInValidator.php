@@ -10,7 +10,8 @@ class AngularBuiltInValidator extends AngularValidator
     public static $defaultValidators = [
         'yii\validators\RequiredValidator' => 'undefinedstudio\yii2\angularform\validators\RequiredValidator',
         'yii\validators\StringValidator' => 'undefinedstudio\yii2\angularform\validators\StringValidator',
-        'yii\validators\NumberValidator' => 'undefinedstudio\yii2\angularform\validators\NumberValidator'
+        'yii\validators\NumberValidator' => 'undefinedstudio\yii2\angularform\validators\NumberValidator',
+        'yii\validators\EmailValidator' => 'undefinedstudio\yii2\angularform\validators\EmailValidator'
     ];
 
     /** @var Validator */
