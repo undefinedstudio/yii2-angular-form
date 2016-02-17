@@ -2,7 +2,6 @@
   "name": "undefinedstudio/yii2-angular-form",
   "type": "yii2-extension",
   "description": "Yii2 Angular Form",
-  "version": "0.4.1",
   "authors": [
     {
       "name": "Gabriele Della Casa Venturelli",
@@ -21,7 +20,7 @@
   "license": "BSD-3-Clause",
   "require": {
     "yiisoft/yii2": "*",
-    "undefinedstudio/yii2-angular": "^0.1.0"
+    "undefinedstudio/yii2-angular": ">=0.1.0"
   },
   "require-dev": {
     "yiisoft/yii2-bootstrap": "*"
