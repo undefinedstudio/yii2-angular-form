@@ -11,6 +11,7 @@ class TestForm extends Model
     public $surname;
     public $age;
     public $email;
+    public $compareEmail;
     public $phone;
 
     /**
@@ -23,6 +24,7 @@ class TestForm extends Model
             [['name', 'surname'], 'string', 'max' => 30],
             ['age', 'integer'],
             ['email', 'email'],
+            ['repeatEmail', 'compare', 'compareAttribute' => 'email'],
 
             ['pattern', 'required'],
             ['pattern', 'match', 'pattern' => '/[a-z]{3}/', 'not' => true],
