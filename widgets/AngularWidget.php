@@ -12,13 +12,20 @@ class AngularWidget extends Widget
 
     public $options = [];
 
+    public $directive;
     public $modelAttribute = 'ng-model';
 
     public function init()
     {
         parent::init();
         if ($this->model && $this->attribute) {
+            $this->options['name'] = Html::getInputName($this->model, $this->attribute);
             $this->options[$this->modelAttribute] = Html::getInputNgModel($this->model, $this->attribute);
         }
+    }
+
+    public function run()
+    {
+        return Html::tag($this->directive, null, $this->options);
     }
 }
