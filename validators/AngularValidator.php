@@ -34,7 +34,9 @@ class AngularValidator extends Validator
      */
     public function validators()
     {
-        return [];
+        $pascalCase = implode(array_map('ucfirst', explode('-', $this->directive)));
+        $camelCase = lcfirst($pascalCase);
+        return ['message' => $camelCase];
     }
 
     /**

@@ -16,13 +16,6 @@ class CompareValidator extends AngularBuiltInValidator
         ];
     }
 
-    public function validators()
-    {
-        return [
-            'message' => 'usCompare'
-        ];
-    }
-
     public function params()
     {
         return [

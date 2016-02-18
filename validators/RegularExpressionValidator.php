@@ -16,13 +16,6 @@ class RegularExpressionValidator extends AngularBuiltInValidator
         ];
     }
 
-    public function validators()
-    {
-        return [
-            'message' => 'usMatch'
-        ];
-    }
-
     public function params()
     {
         $patternWrapper = substr($this->originalValidator->pattern, 0, 1);

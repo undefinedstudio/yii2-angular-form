@@ -11,7 +11,7 @@ angular.module('yii2-angular-form').directive('usCompare', function() {
 
             ngModel.$validators.usCompare = function(value) {
                 // Should be using $modelValue but it doesn't work
-                return value == form[compareAttribute].$viewValue;
+                return !value || (value == form[compareAttribute].$viewValue);
             };
         }
     }
