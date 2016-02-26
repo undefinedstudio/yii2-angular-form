@@ -155,9 +155,21 @@ class Html extends \yii\helpers\BaseHtml
         $formName = $model->formName();
         $formNgModel = Html::getFormNgModel($model, $attribute);
 
+        // Compute error showing condition
+        $errorCondition = [];
+        if (!isset($options['ifDirty']) || $options['ifDirty']) {
+            $errorCondition[] = $formNgModel . '.$dirty';
+            unset($options['ifDirty']);
+        }
+        if (!isset($options['ifTouched']) || $options['ifTouched']) {
+            $errorCondition[] = $formNgModel . '.$touched';
+            unset($options['ifTouched']);
+        }
+        $errorCondition = implode(' && ', $errorCondition);
+
         $ngMessages = Html::tag('div', implode("\n", $ngMessages), [
             'ng-messages' => $formNgModel . '.$error',
-            'ng-if' => $formNgModel . '.$dirty || ' . $formName . '.$submitted'
+            'ng-if' => '(' . $errorCondition . ')  || ' . $formName . '.$submitted'
         ]);
 
         return Html::tag($tag, $ngMessages, $options);

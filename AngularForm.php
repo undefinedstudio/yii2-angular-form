@@ -71,6 +71,29 @@ class AngularForm extends Widget
      */
     public $fieldConfig = [];
 
+    /**
+     * @var boolean whether to perform validation when the value of an input field is changed.
+     * If [[ActiveField::validateOnChange]] is set, its value will take precedence for that input field.
+     */
+    public $validateOnChange = false;
+    /**
+     * @var boolean whether to perform validation when an input field loses focus.
+     * If [[ActiveField::$validateOnBlur]] is set, its value will take precedence for that input field.
+     */
+    public $validateOnBlur = true;
+    /**
+     * @var boolean whether to perform validation while the user is typing in an input field.
+     * If [[ActiveField::validateOnType]] is set, its value will take precedence for that input field.
+     * @see validationDelay
+     */
+    public $validateOnType = false;
+    /**
+     * @var integer number of milliseconds that the validation should be delayed when the user types in the field
+     * and [[validateOnType]] is set true.
+     * If [[ActiveField::validationDelay]] is set, its value will take precedence for that input field.
+     */
+    public $validationDelay = 0;
+
     /** @var AngularField[] the ActiveField objects that are currently active */
     private $_fields = [];
 

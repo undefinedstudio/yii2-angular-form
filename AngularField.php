@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Component;
 use yii\base\ErrorHandler;
 use yii\base\Model;
+use yii\helpers\Json;
 
 class AngularField extends Component
 {
@@ -138,6 +139,22 @@ class AngularField extends Component
         }
     }
 
+    /** {@inheritdoc} */
+    public function init()
+    {
+        $validationOptions = [
+            'validateOnChange', 'validateOnBlur', 'validateOnType',
+            'validationDelay'
+        ];
+
+        // Set validation from form if not set
+        foreach($validationOptions as $option) {
+            if (is_null($this->$option)) {
+                $this->$option = $this->form->$option;
+            }
+        }
+    }
+
     /**
      * Renders the whole field.
      * This method will generate the label, error tag, input tag and hint tag (if any), and
@@ -255,7 +272,12 @@ class AngularField extends Component
             $this->parts['{error}'] = '';
             return $this;
         }
-        $options = array_merge($this->errorOptions, $options);
+
+        $options = array_merge($this->errorOptions, [
+            'ifDirty' => $this->validateOnBlur || $this->validateOnType || $this->validateOnChange,
+            'ifTouched' => $this->validateOnBlur
+        ], $options);
+
         $this->parts['{error}'] = Html::error($this->model, $this->attribute, $options);
 
         return $this;
@@ -296,6 +318,8 @@ class AngularField extends Component
     {
         $options = array_merge($this->inputOptions, $options);
         $this->adjustLabelFor($options);
+
+        $options['ng-model-options'] = $this->getNgModelOptions();
         $this->parts['{input}'] = Html::activeInput($type, $this->model, $this->attribute, $options);
 
         return $this;
@@ -322,6 +346,8 @@ class AngularField extends Component
     {
         $options = array_merge($this->inputOptions, $options);
         $this->adjustLabelFor($options);
+
+        $options['ng-model-options'] = $this->getNgModelOptions();
         $this->parts['{input}'] = Html::activeTextInput($this->model, $this->attribute, $options);
 
         return $this;
@@ -347,6 +373,7 @@ class AngularField extends Component
     {
         $options = array_merge($this->inputOptions, $options);
         $this->adjustLabelFor($options);
+
         $this->parts['{input}'] = Html::activeHiddenInput($this->model, $this->attribute, $options);
 
         return $this;
@@ -367,6 +394,8 @@ class AngularField extends Component
     {
         $options = array_merge($this->inputOptions, $options);
         $this->adjustLabelFor($options);
+
+        $options['ng-model-options'] = $this->getNgModelOptions();
         $this->parts['{input}'] = Html::activePasswordInput($this->model, $this->attribute, $options);
 
         return $this;
@@ -409,6 +438,8 @@ class AngularField extends Component
     {
         $options = array_merge($this->inputOptions, $options);
         $this->adjustLabelFor($options);
+
+        $options['ng-model-options'] = $this->getNgModelOptions();
         $this->parts['{input}'] = Html::activeTextarea($this->model, $this->attribute, $options);
 
         return $this;
@@ -643,5 +674,30 @@ class AngularField extends Component
         if (isset($options['id']) && !isset($this->labelOptions['for'])) {
             $this->labelOptions['for'] = $options['id'];
         }
+    }
+
+    /**
+     * Compute the ngModelOption attribute needed for inputs
+     * @return array
+     */
+    protected function getNgModelOptions()
+    {
+        static $validationTypes = [
+            'validateOnBlur' => 'blur',
+            'validateOnType' => 'keyup',
+            'validateOnChange' => 'default'
+        ];
+
+        $updateOn = [];
+        foreach($validationTypes as  $validationType => $event) {
+            if ($this->$validationType) {
+                $updateOn[] = $event;
+            }
+        }
+
+        return Json::encode(array_filter([
+            'updateOn' => implode(' ', $updateOn),
+            'debounce' => $this->validationDelay
+        ]));
     }
 }
