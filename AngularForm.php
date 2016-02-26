@@ -52,9 +52,11 @@ class AngularForm extends Widget
      */
     public $ngSubmit;
 
-    /** @var bool Allow nested forms definition by using the ng-form tag */
-    // TODO: make this automatic
-    public $nested = false;
+    /**
+     * @var bool Allow nested forms definition by using the ng-form tag
+     * By default it is automatically inferred by parent AngularForm
+     */
+    public $nested;
 
     /**
      * @var array|\Closure the default configuration used by [[field()]] when creating a new field object.
@@ -97,6 +99,9 @@ class AngularForm extends Widget
     /** @var AngularField[] the ActiveField objects that are currently active */
     private $_fields = [];
 
+    /** @var bool static property used to determine if the current form has a parent and should be nested */
+    private static $hasParentForm = false;
+
     /**
      * Initializes the widget.
      * This renders the form open tag.
@@ -112,6 +117,14 @@ class AngularForm extends Widget
             'ng-submit' => empty($this->ngSubmit) ? null : $this->ngSubmit
         ], $this->options);
 
+        // Automatically determine if nested
+        $this->nested = $this->nested != null ? $this->nested : self::$hasParentForm;
+
+        // Start form hierarchy if parent
+        if (!$this->nested) {
+            self::$hasParentForm = true;
+        }
+
         echo Html::beginTag($this->nested ? 'ng-form' : 'form', $this->options);
         echo Html::tag('us-model-data', Json::encode($this->model->attributes), ['ng-model' => $this->model->formName() . '.$data']);
     }
@@ -125,6 +138,11 @@ class AngularForm extends Widget
     {
         if (!empty($this->_fields)) {
             throw new InvalidCallException('Each beginField() should have a matching endField() call.');
+        }
+
+        // Reset form hierarchy if parent
+        if (!$this->nested) {
+            self::$hasParentForm = false;
         }
 
         echo Html::endTag($this->nested ? 'ng-form' : 'form');

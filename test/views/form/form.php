@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= Html::submitButton() ?>
 
-    <?php AngularForm::end() ?>
+    <?php $form->end() ?>
+
 
 </div>
