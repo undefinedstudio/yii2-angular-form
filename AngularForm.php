@@ -125,8 +125,10 @@ class AngularForm extends Widget
             self::$hasParentForm = true;
         }
 
+        $data = Json::encode($this->model->attributes);
+
         echo Html::beginTag($this->nested ? 'ng-form' : 'form', $this->options);
-        echo Html::tag('us-model-data', Json::encode($this->model->attributes), ['ng-model' => $this->model->formName() . '.$data']);
+        echo Html::tag('us-model-data', strtr($data, ['<' => '&lt;', '>' => '&gt;']), ['ng-model' => $this->model->formName() . '.$data']);
     }
 
     /**
